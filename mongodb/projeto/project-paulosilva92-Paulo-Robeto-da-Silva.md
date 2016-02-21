@@ -127,7 +127,6 @@ activity: {
 ```js
 paulo(mongod-3.2.3) be-mean-mongo> function create() {
 ...   var arr = [];
-...
 ...   for (var i = 0; i < 10; i++) {
 ...     arr[i] = {
 ...         name: 'usuario'+i
@@ -715,15 +714,15 @@ Fetched 1 record(s) in 3ms
 ### Liste todos os projetos com a tag que voce escolheu para os 3 projetos em comum
 
 ```js
-paulo(mongod-3.2.3) be-mean-mongo> var query = { tags: 'bacana' };
-paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var query = { tags: 'bacana' };
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
 {
-  "_id": ObjectId("56c75b0d575c7e314d6346f2"),
+  "_id": ObjectId("56c8945aede090a4e26b8da2"),
   "name": "projeto 1",
   "description": "descrição do projeto numero 1",
-  "date_begin": ISODate("2016-02-19T18:12:13.467Z"),
-  "date_dream": ISODate("2016-02-19T18:12:13.467Z"),
-  "date_end": ISODate("2016-02-19T18:12:13.467Z"),
+  "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_end": ISODate("2016-02-20T16:29:00.191Z"),
   "visible": false,
   "realocate": false,
   "expired": false,
@@ -737,9 +736,9 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
     {
       "name": "meta 1",
       "description": "descricao da meta 1",
-      "date_begin": ISODate("2016-02-19T18:12:13.467Z"),
-      "date_dream": ISODate("2016-02-19T18:12:13.467Z"),
-      "date_end": ISODate("2016-02-19T18:12:13.467Z"),
+      "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_end": ISODate("2016-02-20T16:29:00.191Z"),
       "visible": true,
       "realocate": false,
       "expired": false,
@@ -750,7 +749,7 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
       ],
       "historic": [
         {
-          "date_realocate": ISODate("2016-02-19T18:12:13.467Z")
+          "date_realocate": ISODate("2016-02-20T16:29:00.191Z")
         }
       ]
     }
@@ -784,12 +783,12 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
   ]
 }
 {
-  "_id": ObjectId("56c75b0d575c7e314d6346f3"),
+  "_id": ObjectId("56c8945aede090a4e26b8da3"),
   "name": "projeto 2",
   "description": "descrição do projeto numero 2",
-  "date_begin": ISODate("2016-02-19T18:12:13.467Z"),
-  "date_dream": ISODate("2016-02-19T18:12:13.467Z"),
-  "date_end": ISODate("2016-02-19T18:12:13.467Z"),
+  "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_end": ISODate("2016-02-20T16:29:00.191Z"),
   "visible": false,
   "realocate": false,
   "expired": false,
@@ -803,9 +802,9 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
     {
       "name": "meta 1",
       "description": "descricao da meta 1",
-      "date_begin": ISODate("2016-02-19T18:12:13.467Z"),
-      "date_dream": ISODate("2016-02-19T18:12:13.467Z"),
-      "date_end": ISODate("2016-02-19T18:12:13.467Z"),
+      "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_end": ISODate("2016-02-20T16:29:00.191Z"),
       "visible": true,
       "realocate": false,
       "expired": false,
@@ -816,7 +815,7 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
       ],
       "historic": [
         {
-          "date_realocate": ISODate("2016-02-19T18:12:13.467Z")
+          "date_realocate": ISODate("2016-02-20T16:29:00.191Z")
         }
       ]
     }
@@ -850,12 +849,12 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
   ]
 }
 {
-  "_id": ObjectId("56c75b0d575c7e314d6346f4"),
+  "_id": ObjectId("56c8945aede090a4e26b8da4"),
   "name": "projeto 3",
   "description": "descrição do projeto numero 3",
-  "date_begin": ISODate("2016-02-19T18:12:13.467Z"),
-  "date_dream": ISODate("2016-02-19T18:12:13.467Z"),
-  "date_end": ISODate("2016-02-19T18:12:13.467Z"),
+  "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_end": ISODate("2016-02-20T16:29:00.191Z"),
   "visible": false,
   "realocate": false,
   "expired": false,
@@ -869,9 +868,9 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
     {
       "name": "meta 1",
       "description": "descricao da meta 1",
-      "date_begin": ISODate("2016-02-19T18:12:13.467Z"),
-      "date_dream": ISODate("2016-02-19T18:12:13.467Z"),
-      "date_end": ISODate("2016-02-19T18:12:13.467Z"),
+      "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_end": ISODate("2016-02-20T16:29:00.191Z"),
       "visible": true,
       "realocate": false,
       "expired": false,
@@ -882,7 +881,7 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
       ],
       "historic": [
         {
-          "date_realocate": ISODate("2016-02-19T18:12:13.467Z")
+          "date_realocate": ISODate("2016-02-20T16:29:00.191Z")
         }
       ]
     }
@@ -915,7 +914,7 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
     }
   ]
 }
-Fetched 3 record(s) in 12ms
+Fetched 3 record(s) in 10ms
 ```
 
 ### Liste apenas os nomes de todas as atividades para todos os projetos
@@ -934,8 +933,9 @@ Fetched 1 record(s) in 1ms
 ### Liste todos os projetos que não possuam uma tag.
 
 ```js
-var query = { tags : [] }
-db.projects.find(query)
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var query = { tags : [] }
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
+Fetched 0 record(s) in 1ms
 ```
 
 ### Liste todos os usuários que não fazem parte do primeiro projeto cadastrado.
@@ -966,6 +966,79 @@ paulo(mongod-3.2.3) be-mean-mongo> db.users.find( { _id : { $not : { $in : membe
 Fetched 5 record(s) in 2ms
 ```
 ## Update - alteração
+
+### Adicione para todos os projetos o campo views: 0.
+
+```js
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var query = {};
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var mod = {$set : { views : 0}};
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var options = { multi : true};
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.update(query, mod , options);
+Updated 5 existing record(s) in 1ms
+WriteResult({
+  "nMatched": 5,
+  "nUpserted": 0,
+  "nModified": 5
+})
+```
+
+### Adicione 1 tag diferente para cada projeto.
+
+```js
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> function updateTag() {
+...   var tag = ['bom', 'ótimo', 'supimposo', 'maravilhosa', 'formogostoso'];
+...   var i = 0;
+...   function upt(proj){
+...     var query = proj;
+...     var mod = { $push : {tags : tag[i] } }
+...     db.projects.update(query,mod);
+...     i++;
+...   }
+...   var query = {};
+...   db.projects.find(query).forEach(upt);
+... }
+paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> updateTag()
+Updated 1 existing record(s) in 4ms
+Updated 1 existing record(s) in 2ms
+Updated 1 existing record(s) in 2ms
+Updated 1 existing record(s) in 2ms
+Updated 1 existing record(s) in 2ms
+```
+
+### Adicione 2 membros diferentes para cada projeto.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> function updt(proj){
+...   var members = [];
+...   function getMembers(member) {
+...     members.push(member.id_user);
+...   };
+...   var query = {}
+...   proj.members.forEach(getMembers);
+...   var notIn = [];
+...   function getNotIn(user){
+...     notIn.push(user._id);
+...   };
+...   db.users.find( { _id : { $not : { $in : members } } } ).forEach(getNotIn);
+...   function notInUp(elemento){
+...     var user = {id_user : elemento, notify: true, type_member: "senior" }
+...     var mod = { $push : { members : user } };
+...     db.projects.update({name: proj.name},mod);
+...   };
+...   notIn.splice(0,2).forEach(notInUp);
+... }
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.find({}).forEach(updt);
+Updated 1 existing record(s) in 746ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 2ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 1ms
+```
 
 ## Delete - remoção
 

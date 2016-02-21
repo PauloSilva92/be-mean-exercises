@@ -588,3 +588,87 @@ function goals(){
   };
   return activities;
 }
+
+
+
+
+
+
+Update
+
+var query = {};
+var mod = {$set : { views : 0}};
+var options = { multi : true};
+db.projects.update(query, mod , options);
+
+
+
+function updateTag() {
+  var tag = ['bom', 'ótimo', 'supimposo', 'maravilhosa', 'formogostoso'];
+  var i = 0;
+  function upt(proj){
+    var query = proj;
+    var mod = { $push : {tags : tag[i] } }
+    db.projects.update(query,mod);
+    i++;
+  }
+  var query = {};
+  db.projects.find(query).forEach(upt);
+}
+
+
+//1 pegar os membros do projeto atual
+//2 buscar os membros que não estão no projeto
+//3 inserir os dois primeiros membros que não estão no projeto
+
+  //pega o id de todos os usuarios armazena no array users
+  /*var users = [];
+  function getUsers(user){
+    users.push(user._id);
+  };
+  db.users.find().forEach(getUsers);*/
+
+  //pega o id dos membros do projeto armazena no array members
+
+function updt(proj){
+  var members = [];
+  function getMembers(member) {
+    members.push(member.id_user);
+  };
+  var query = {}
+  proj.members.forEach(getMembers);
+  var notIn = [];
+  function getNotIn(user){
+    notIn.push(user._id);
+  };
+  db.users.find( { _id : { $not : { $in : members } } } ).forEach(getNotIn);
+  function notInUp(elemento){
+    var user = {id_user : elemento, notify: true, type_member: "senior" }
+    var mod = { $push : { members : user } };
+    db.projects.update({name: proj.name},mod);
+  };
+  notIn.splice(0,2).forEach(notInUp);
+}
+db.projects.find({}).forEach(updt);
+
+
+
+var teste = "";
+function updt(proj){
+  var members = [];
+  function getMembers(member) {
+    members.push(member.id_user);
+  };
+  var query = {}
+  proj.members.forEach(getMembers);
+  var notIn = [];
+  function getNotIn(user){
+    notIn.push(user._id);
+  };
+  db.users.find( { _id : { $not : { $in : members } } } ).forEach(getNotIn);
+  function notInUp(elemento){
+    teste += elemento;
+  };
+  notIn.splice(0,2).forEach(notInUp);
+}
+db.projects.find({}).forEach(updt);
