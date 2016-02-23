@@ -2,7 +2,10 @@
 **Autor:** Paulo Roberto da Silva
 **Data** Date.now() //em timestamp
 
+
 ## Para qual sistema você usaria o MogoDB (diferente desse)?
+
+O MongoDb é perfeito pra sistemas que possuem grande processamento de dados não-relacionados entre si. Banco de dados de supermercados onde serão guardadas as notas fiscais ou os preços e dados dos produtos seria uma boa utilização.
 
 ## Qual a modelagem da sua coleção de `users`?
 
@@ -10,8 +13,8 @@
 user : {
   name: { type : String }
   ,bio: { type : String }
-  ,date-register: { type : Date }
-  ,avatar-path: { type : String }
+  ,date_register: { type : Date }
+  ,avatar_path: { type : String }
   ,auth: {
     username: { type : String }
     ,email: { type : String }
@@ -55,10 +58,15 @@ project: {
         ,tags: [
           { tag_name: { type : String } }
         ],
-        ,historic: [
+        ,historic: 
+        [
           { date_realocate: { type: Date } }
         ]
       }
+      ,activities:
+        [
+          id_activity : { type : ObjectID}
+        ]
     ]
   ,members:
     [
@@ -73,6 +81,8 @@ project: {
 
 ## Qual a modelagem da sua coleção retirada de `projects`?
 
+Foi escolhida a parte de atividades para ser criada uma collection unica por ela ser grande e como um projeto pode ter muitas metas e cada meta muitas atividades, isso pode tornar o documento a ser salvo grande demais para o limite de 16 MB que o MongoDB suporta.
+
 ```js
 activity: {
   name: { type : String },
@@ -80,11 +90,9 @@ activity: {
   ,date_begin: { type : Date }
   ,date_dream: { type : Date }
   ,date_end: { type : Date }
-  ,realocate: { type : Boolean }
-  ,expired: { type : Boolean }
-  ,id_project: { type : ObjectID }
-  ,goal: { type : String }
-  ,members-activity :
+  ,realocate: { type: Boolean }
+  ,expired: { type: Boolean }
+  ,members_activity :
     [
       {
         id_user : { type : ObjectID }
@@ -98,7 +106,7 @@ activity: {
     ]
   ,tag:
     [
-      { id_tag: { type : ObjectID } }
+      { tag_name: { type : String } }
     ]
   ,comment:
     [
@@ -122,7 +130,7 @@ activity: {
 
 ## Create - cadastro
 
-### Cadastre 10 usuários diferentes
+### 1. Cadastre 10 usuários diferentes.
 
 ```js
 paulo(mongod-3.2.3) be-mean-mongo> function create() {
@@ -310,12 +318,13 @@ paulo(mongod-3.2.3) be-mean-mongo> db.users.find()
   }
 }
 Fetched 10 record(s) in 789ms
-
 ```
 
-### cadastre 5 projetos diferentes
+### 2. Cadastre 5 projetos diferentes.
+
 ```js
-paulo(mongod-3.2.3) be-mean-mongo> var projects = [
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var projects =
+... [
 ...   {
 ...     name: 'projeto 1'
 ...     ,description: 'descrição do projeto numero 1'
@@ -353,6 +362,16 @@ paulo(mongod-3.2.3) be-mean-mongo> var projects = [
 ...             [
 ...               { date_realocate:  new Date}
 ...             ]
+...           ,activities:
+...             [
+...               {
+...                 "_id": ObjectId("56cc0ab7694907cadd043404")
+...               }
+...               ,{
+...                 "_id": ObjectId("56cc0ab7694907cadd043405")
+...               }
+... 
+...             ]
 ...         }
 ...       ]
 ...     ,members:
@@ -381,7 +400,7 @@ paulo(mongod-3.2.3) be-mean-mongo> var projects = [
 ...           id_user: ObjectId("56c65d3e83398baff5bdf9ff")
 ...           ,type_member : 'senior'
 ...           ,notify: true
-...         }
+            }
 ...       ]
 ...   }
 ...   ,{
@@ -415,16 +434,25 @@ paulo(mongod-3.2.3) be-mean-mongo> var projects = [
 ...             [
 ...               'rapidez'
 ...               ,'agilidade'
-...               ,'facil'
+   .              ,'facil'
 ...             ]
 ...           ,historic:
 ...             [
 ...               { date_realocate:  new Date}
 ...             ]
+...           ,activities:
+...             [
+...               {
+...                 "_id": ObjectId("56cc0ab7694907cadd043404")
+...               }
+...               ,{
+...                 "_id": ObjectId("56cc0ab7694907cadd043405")
+...               }
+...             ]
 ...         }
 ...       ]
 ...     ,members:
-...       [
+ tru      [
 ...         {
 ...           id_user: ObjectId("56c65d3e83398baff5bdfa00")
 ...           ,type_member : 'senior'
@@ -439,7 +467,7 @@ paulo(mongod-3.2.3) be-mean-mongo> var projects = [
 ...           id_user: ObjectId("56c65d3e83398baff5bdfa02")
 ...           ,type_member : 'senior'
 ...           ,notify: true
-...         }
+aliz        }
 ...         ,{
 ...           id_user: ObjectId("56c65d3e83398baff5bdfa04")
 ...           ,type_member : 'senior'
@@ -488,6 +516,15 @@ paulo(mongod-3.2.3) be-mean-mongo> var projects = [
 ...           ,historic:
 ...             [
 ...               { date_realocate:  new Date}
+...             ]
+...           ,activities:
+...             [
+...               {
+...                 "_id": ObjectId("56cc0ab7694907cadd043404")
+...               }
+...               ,{
+...                 "_id": ObjectId("56cc0ab7694907cadd043405")
+...               }
 ...             ]
 ...         }
 ...       ]
@@ -557,6 +594,15 @@ paulo(mongod-3.2.3) be-mean-mongo> var projects = [
 ...             [
 ...               { date_realocate:  new Date}
 ...             ]
+...           ,activities:
+...             [
+...               {
+...                 "_id": ObjectId("56cc0ab7694907cadd043404")
+...               }
+...               ,{
+...                 "_id": ObjectId("56cc0ab7694907cadd043405")
+...               }
+...             ]
 ...         }
 ...       ]
 ...     ,members:
@@ -625,6 +671,8 @@ paulo(mongod-3.2.3) be-mean-mongo> var projects = [
 ...             [
 ...               { date_realocate:  new Date}
 ...             ]
+...           ,activities:
+...             [ ]
 ...         }
 ...       ]
 ...     ,members:
@@ -657,8 +705,8 @@ paulo(mongod-3.2.3) be-mean-mongo> var projects = [
 ...       ]
 ...   }
 ... ];
-paulo(mongod-3.2.3) be-mean-mongo> db.projects.insert(projects)
-Inserted 1 record(s) in 248ms
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.insert(projects)
+Inserted 1 record(s) in 196ms
 BulkWriteResult({
   "writeErrors": [ ],
   "writeConcernErrors": [ ],
@@ -673,12 +721,12 @@ BulkWriteResult({
 
 ## Retrieve - busca
 
-### Liste as informações dos membros de 1 projeto especifico que deve ser buscado pelo seu nome de forma a não ligar para maiúsculas e minúsculas
+### 1. Liste as informações dos membros de 1 projeto especifico que deve ser buscado pelo seu nome de forma a não ligar para maiúsculas e minúsculas
 
 ```js
-paulo(mongod-3.2.3) be-mean-mongo> var query  = { name: /projeto 4/i };
-paulo(mongod-3.2.3) be-mean-mongo> var fields = { members: 1, _id: 0 };
-paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query, fields)
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo>  var query  = { name: /projeto 4/i };
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var fields = { members: 1, _id: 0 };
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query, fields)
 {
   "members": [
     {
@@ -708,21 +756,21 @@ paulo(mongod-3.2.3) be-mean-mongo> db.projects.find(query, fields)
     }
   ]
 }
-Fetched 1 record(s) in 3ms
+Fetched 1 record(s) in 4ms
 ```
 
-### Liste todos os projetos com a tag que voce escolheu para os 3 projetos em comum
+### 2. Liste todos os projetos com a tag que voce escolheu para os 3 projetos em comum
 
 ```js
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var query = { tags: 'bacana' };
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var query = { tags: 'bacana' };
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
 {
-  "_id": ObjectId("56c8945aede090a4e26b8da2"),
+  "_id": ObjectId("56cc0b6783bfa35d1a884d03"),
   "name": "projeto 1",
   "description": "descrição do projeto numero 1",
-  "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
-  "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
-  "date_end": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_begin": ISODate("2016-02-23T07:33:42.624Z"),
+  "date_dream": ISODate("2016-02-23T07:33:42.624Z"),
+  "date_end": ISODate("2016-02-23T07:33:42.624Z"),
   "visible": false,
   "realocate": false,
   "expired": false,
@@ -736,9 +784,9 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
     {
       "name": "meta 1",
       "description": "descricao da meta 1",
-      "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
-      "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
-      "date_end": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_begin": ISODate("2016-02-23T07:33:42.624Z"),
+      "date_dream": ISODate("2016-02-23T07:33:42.624Z"),
+      "date_end": ISODate("2016-02-23T07:33:42.624Z"),
       "visible": true,
       "realocate": false,
       "expired": false,
@@ -749,7 +797,15 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
       ],
       "historic": [
         {
-          "date_realocate": ISODate("2016-02-20T16:29:00.191Z")
+          "date_realocate": ISODate("2016-02-23T07:33:42.624Z")
+        }
+      ],
+      "activities": [
+        {
+          "_id": ObjectId("56cc0ab7694907cadd043404")
+        },
+        {
+          "_id": ObjectId("56cc0ab7694907cadd043405")
         }
       ]
     }
@@ -783,12 +839,12 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
   ]
 }
 {
-  "_id": ObjectId("56c8945aede090a4e26b8da3"),
+  "_id": ObjectId("56cc0b6783bfa35d1a884d04"),
   "name": "projeto 2",
   "description": "descrição do projeto numero 2",
-  "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
-  "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
-  "date_end": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_begin": ISODate("2016-02-23T07:33:42.624Z"),
+  "date_dream": ISODate("2016-02-23T07:33:42.624Z"),
+  "date_end": ISODate("2016-02-23T07:33:42.624Z"),
   "visible": false,
   "realocate": false,
   "expired": false,
@@ -802,9 +858,9 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
     {
       "name": "meta 1",
       "description": "descricao da meta 1",
-      "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
-      "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
-      "date_end": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_begin": ISODate("2016-02-23T07:33:42.624Z"),
+      "date_dream": ISODate("2016-02-23T07:33:42.624Z"),
+      "date_end": ISODate("2016-02-23T07:33:42.624Z"),
       "visible": true,
       "realocate": false,
       "expired": false,
@@ -815,7 +871,15 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
       ],
       "historic": [
         {
-          "date_realocate": ISODate("2016-02-20T16:29:00.191Z")
+          "date_realocate": ISODate("2016-02-23T07:33:42.624Z")
+        }
+      ],
+      "activities": [
+        {
+          "_id": ObjectId("56cc0ab7694907cadd043404")
+        },
+        {
+          "_id": ObjectId("56cc0ab7694907cadd043405")
         }
       ]
     }
@@ -849,12 +913,12 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
   ]
 }
 {
-  "_id": ObjectId("56c8945aede090a4e26b8da4"),
+  "_id": ObjectId("56cc0b6783bfa35d1a884d05"),
   "name": "projeto 3",
   "description": "descrição do projeto numero 3",
-  "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
-  "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
-  "date_end": ISODate("2016-02-20T16:29:00.191Z"),
+  "date_begin": ISODate("2016-02-23T07:33:42.624Z"),
+  "date_dream": ISODate("2016-02-23T07:33:42.624Z"),
+  "date_end": ISODate("2016-02-23T07:33:42.624Z"),
   "visible": false,
   "realocate": false,
   "expired": false,
@@ -868,9 +932,9 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
     {
       "name": "meta 1",
       "description": "descricao da meta 1",
-      "date_begin": ISODate("2016-02-20T16:29:00.191Z"),
-      "date_dream": ISODate("2016-02-20T16:29:00.191Z"),
-      "date_end": ISODate("2016-02-20T16:29:00.191Z"),
+      "date_begin": ISODate("2016-02-23T07:33:42.624Z"),
+      "date_dream": ISODate("2016-02-23T07:33:42.624Z"),
+      "date_end": ISODate("2016-02-23T07:33:42.624Z"),
       "visible": true,
       "realocate": false,
       "expired": false,
@@ -881,7 +945,15 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
       ],
       "historic": [
         {
-          "date_realocate": ISODate("2016-02-20T16:29:00.191Z")
+          "date_realocate": ISODate("2016-02-23T07:33:42.624Z")
+        }
+      ],
+      "activities": [
+        {
+          "_id": ObjectId("56cc0ab7694907cadd043404")
+        },
+        {
+          "_id": ObjectId("56cc0ab7694907cadd043405")
         }
       ]
     }
@@ -914,40 +986,44 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
     }
   ]
 }
-Fetched 3 record(s) in 10ms
+Fetched 3 record(s) in 7ms
 ```
 
-### Liste apenas os nomes de todas as atividades para todos os projetos
+### 3. Liste apenas os nomes de todas as atividades para todos os projeto
 
 ```js
-paulo(mongod-3.2.3) be-mean-mongo> var query = {}
-paulo(mongod-3.2.3) be-mean-mongo> var fields = { name : 1}
-paulo(mongod-3.2.3) be-mean-mongo> db.activities.find(query, fields)
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var query = {}
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var fields = { name : 1}
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.activities.find(query, fields)
 {
-  "_id": ObjectId("56c761a2575c7e314d6346f7"),
-  "name": "Varrer o chão"
+  "_id": ObjectId("56cc0ab7694907cadd043404"),
+  "name": "atividade 1"
 }
-Fetched 1 record(s) in 1ms
+{
+  "_id": ObjectId("56cc0ab7694907cadd043405"),
+  "name": "atividade 2"
+}
+Fetched 2 record(s) in 3ms
 ```
 
-### Liste todos os projetos que não possuam uma tag.
+### 4. Liste todos os projetos que não possuam uma tag.
 
 ```js
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var query = { tags : [] }
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var query = { tags : [] }
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.find(query)
 Fetched 0 record(s) in 1ms
 ```
 
-### Liste todos os usuários que não fazem parte do primeiro projeto cadastrado.
+### 5. Liste todos os usuários que não fazem parte do primeiro projeto cadastrado.
 
 ```js
-paulo(mongod-3.2.3) be-mean-mongo> var members = [];
-paulo(mongod-3.2.3) be-mean-mongo> function getMembers(member) {
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var members = [];
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> function getMembers(member) {
 ...   members.push(member.id_user);
 ... };
-paulo(mongod-3.2.3) be-mean-mongo> var query = {}
-paulo(mongod-3.2.3) be-mean-mongo> db.projects.findOne(query).members.forEach(getMembers);
-paulo(mongod-3.2.3) be-mean-mongo> db.users.find( { _id : { $not : { $in : members } } },{ name: 1, _id : 0 } );
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var query = {}
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.findOne(query).members.forEach(getMembers);
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.users.find( { _id : { $not : { $in : members } } },{ name: 1, _id : 0 } );
 {
   "name": "usuario0"
 }
@@ -963,18 +1039,19 @@ paulo(mongod-3.2.3) be-mean-mongo> db.users.find( { _id : { $not : { $in : membe
 {
   "name": "usuario8"
 }
-Fetched 5 record(s) in 2ms
+Fetched 5 record(s) in 4ms
 ```
+
 ## Update - alteração
 
-### Adicione para todos os projetos o campo views: 0.
+### 1. Adicione para todos os projetos o campo views: 0.
 
 ```js
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var query = {};
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var mod = {$set : { views : 0}};
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> var options = { multi : true};
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> db.projects.update(query, mod , options);
-Updated 5 existing record(s) in 1ms
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var query = {};
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var mod = {$set : { views : 0}};
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var options = { multi : true};
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.update(query, mod , options);
+Updated 5 existing record(s) in 3ms
 WriteResult({
   "nMatched": 5,
   "nUpserted": 0,
@@ -982,10 +1059,10 @@ WriteResult({
 })
 ```
 
-### Adicione 1 tag diferente para cada projeto.
+### 2. Adicione 1 tag diferente para cada projeto.
 
 ```js
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> function updateTag() {
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> function updateTag() {
 ...   var tag = ['bom', 'ótimo', 'supimposo', 'maravilhosa', 'formogostoso'];
 ...   var i = 0;
 ...   function upt(proj){
@@ -997,15 +1074,15 @@ paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> function updateTag() {
 ...   var query = {};
 ...   db.projects.find(query).forEach(upt);
 ... }
-paulo-STI-NI-1401(mongod-3.2.3) be-mean-mongo> updateTag()
-Updated 1 existing record(s) in 4ms
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> updateTag()
 Updated 1 existing record(s) in 2ms
 Updated 1 existing record(s) in 2ms
-Updated 1 existing record(s) in 2ms
+Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 3ms
 Updated 1 existing record(s) in 2ms
 ```
 
-### Adicione 2 membros diferentes para cada projeto.
+### 3. Adicione 2 membros diferentes para cada projeto.
 
 ```js
 paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> function updt(proj){
@@ -1028,16 +1105,124 @@ paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> function updt(proj){
 ...   notIn.splice(0,2).forEach(notInUp);
 ... }
 paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.find({}).forEach(updt);
-Updated 1 existing record(s) in 746ms
-Updated 1 existing record(s) in 1ms
-Updated 1 existing record(s) in 1ms
 Updated 1 existing record(s) in 2ms
 Updated 1 existing record(s) in 1ms
 Updated 1 existing record(s) in 1ms
 Updated 1 existing record(s) in 1ms
+Updated 1 existing record(s) in 2ms
+Updated 1 existing record(s) in 3ms
+Updated 1 existing record(s) in 2ms
 Updated 1 existing record(s) in 1ms
 Updated 1 existing record(s) in 1ms
 Updated 1 existing record(s) in 1ms
+```
+
+### 4. Adicione 1 comentário em cada atividade, deixe apenas 1 projeto sem.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> comments =
+...       {
+...         text: "outro comentario muito loco"
+...         ,date_comment:new Date
+...         ,member:{
+...           id_user: ObjectId("56cb8e797cb0fd72a7c50edc")
+...           ,notify: true
+...         }
+... 
+...         ,file: {
+...           path: ""
+...           ,weight: 0
+...           ,name: ""
+...         }
+...       };
+{
+  "text": "outro comentario muito loco",
+  "date_comment": ISODate("2016-02-23T08:03:03.612Z"),
+  "member": {
+    "id_user": ObjectId("56cb8e797cb0fd72a7c50edc"),
+    "notify": true
+  },
+  "file": {
+    "path": "",
+    "weight": 0,
+    "name": ""
+  }
+}
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var query = {};
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var mod = { $push : { comment : comments } };
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var opt = { multi : true }
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.activities.update(query, mod, opt)
+Updated 2 existing record(s) in 2ms
+WriteResult({
+  "nMatched": 2,
+  "nUpserted": 0,
+  "nModified": 2
+})
+```
+
+### 5. Adicione 1 projeto inteiro com UPSERT.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var query = { name : /projeto setOnInsert/i};
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var mod = { 
+...   $set : { realocate : true}
+...   , $setOnInsert : {
+...     name: 'projeto setOnInsert'
+...     ,description: 'descrição do projeto setOnInsert'
+...     ,date_begin: new Date
+...     ,date_dream: new Date
+...     ,date_end: new Date
+...     ,visible: false
+...     ,expired: false
+...     ,visualizable_mod: 'yes'
+...     ,tags:
+...       [
+...         'gostoso'
+...         ,'espetacular'
+...         ,'incrivel'
+...       ]
+...     ,goals:
+...       [
+...         {
+...           name: 'meta 1'
+...           ,description: 'descricao da meta 1'
+...           ,date_begin: new Date
+...           ,date_dream: new Date
+...           ,date_end: new Date
+...           ,visible: true
+...           ,realocate: false
+...           ,expired: false
+...           ,tags:
+...             [
+...               'rapidez'
+...               ,'agilidade'
+...               ,'facil'
+...             ]
+...           ,historic:
+...             [
+...               { date_realocate:  new Date}
+...             ]
+...           ,activities:
+...             [
+...              
+...             ]
+...         }
+...       ]
+...     ,members:
+...       [
+...         
+...       ]
+...   }
+...  }
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var opt = { upsert : true};
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.update(query,mod, opt);
+Updated 1 new record(s) in 2ms
+WriteResult({
+  "nMatched": 0,
+  "nUpserted": 1,
+  "nModified": 0,
+  "_id": ObjectId("56cc1cb879c4e7a3cefd119d")
+})
 ```
 
 ## Delete - remoção

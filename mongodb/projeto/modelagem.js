@@ -1,3 +1,8 @@
+
+mongoexport --db be-mean-mongo --collection projects --out projects.json
+
+mongoexport --db be-mean-mongo --collection users --out users.json
+
 activity: {
   name: { type : String },
   ,description: { type : String }
@@ -6,7 +11,7 @@ activity: {
   ,date_end: { type : Date }
   ,realocate: { type: Boolean }
   ,expired: { type: Boolean }
-  ,members-activity :
+  ,members_activity :
     [
       {
         id_user : { type : ObjectID }
@@ -20,7 +25,7 @@ activity: {
     ]
   ,tag:
     [
-      { id_tag: { type : ObjectID } }
+      { tag_name: { type : String } }
     ]
   ,comment:
     [
@@ -39,23 +44,6 @@ activity: {
         }
       }
     ]
-}
-
-
-user : {
-  name: { type : String }
-  ,bio: { type : String }
-  ,date-register: { type : Date }
-  ,avatar-path: { type : String }
-  ,auth: {
-    username: { type : String }
-    ,email: { type : String }
-    ,password: { type : String }
-    ,last-access: { type : Date }
-    ,online: { type: Boolean }
-    ,disabled: { type: Boolean }
-    ,hash-token: { type : String }
-  }
 }
 
 project: {
@@ -86,10 +74,15 @@ project: {
         ,tags: [
           { tag_name: { type : String } }
         ],
-        ,historic: [
+        ,historic: 
+        [
           { date_realocate: { type: Date } }
         ]
       }
+      ,activities:
+        [
+          { id_activity : { type : ObjectID} }
+        ]
     ]
   ,members:
     [
@@ -99,10 +92,22 @@ project: {
         ,notify: { type : Boolean }
       }
     ]
-  ,activities:
-    [
-      { type : "String" }
-    ]
+}
+
+user : {
+  name: { type : String }
+  ,bio: { type : String }
+  ,date_register: { type : Date }
+  ,avatar_path: { type : String }
+  ,auth: {
+    username: { type : String }
+    ,email: { type : String }
+    ,password: { type : String }
+    ,last_access: { type : Date }
+    ,online: { type: Boolean }
+    ,disabled: { type: Boolean }
+    ,hash_token: { type : String }
+  }
 }
 
 
@@ -170,8 +175,13 @@ var projects =
             ]
           ,activities:
             [
-              'fazer tal coisa'
-              ,'fazer outra coisa'
+              {
+                "_id": ObjectId("56cc0ab7694907cadd043404")
+              }
+              ,{
+                "_id": ObjectId("56cc0ab7694907cadd043405")
+              }
+
             ]
         }
       ]
@@ -243,8 +253,12 @@ var projects =
             ]
           ,activities:
             [
-              'fazer tal coisa'
-              ,'fazer outra coisa'
+              {
+                "_id": ObjectId("56cc0ab7694907cadd043404")
+              }
+              ,{
+                "_id": ObjectId("56cc0ab7694907cadd043405")
+              }
             ]
         }
       ]
@@ -316,8 +330,12 @@ var projects =
             ]
           ,activities:
             [
-              'fazer tal coisa'
-              ,'fazer outra coisa'
+              {
+                "_id": ObjectId("56cc0ab7694907cadd043404")
+              }
+              ,{
+                "_id": ObjectId("56cc0ab7694907cadd043405")
+              }
             ]
         }
       ]
@@ -389,8 +407,12 @@ var projects =
             ]
           ,activities:
             [
-              'fazer tal coisa'
-              ,'fazer outra coisa'
+              {
+                "_id": ObjectId("56cc0ab7694907cadd043404")
+              }
+              ,{
+                "_id": ObjectId("56cc0ab7694907cadd043405")
+              }
             ]
         }
       ]
@@ -672,3 +694,134 @@ function updt(proj){
   notIn.splice(0,2).forEach(notInUp);
 }
 db.projects.find({}).forEach(updt);
+
+
+var project = 
+{
+    name: 'projeto setOnInsert'
+    ,description: 'descrição do projeto setOnInsert'
+    ,date_begin: new Date
+    ,date_dream: new Date
+    ,date_end: new Date
+    ,visible: false
+    ,realocate: false
+    ,expired: false
+    ,visualizable_mod: 'yes'
+    ,tags:
+      [
+        'gostoso'
+        ,'espetacular'
+        ,'incrivel'
+      ]
+    ,goals:
+      [
+        {
+          name: 'meta 1'
+          ,description: 'descricao da meta 1'
+          ,date_begin: new Date
+          ,date_dream: new Date
+          ,date_end: new Date
+          ,visible: true
+          ,realocate: false
+          ,expired: false
+          ,tags:
+            [
+              'rapidez'
+              ,'agilidade'
+              ,'facil'
+            ]
+          ,historic:
+            [
+              { date_realocate:  new Date}
+            ]
+          ,activities:
+            [
+             
+            ]
+        }
+      ]
+    ,members:
+      [
+        
+      ]
+  };
+var query = { name : /projeto setOnInsert/i};
+var mod = { 
+  $set : { realocate : true}
+  , $setOnInsert : {
+    name: 'projeto setOnInsert'
+    ,description: 'descrição do projeto setOnInsert'
+    ,date_begin: new Date
+    ,date_dream: new Date
+    ,date_end: new Date
+    ,visible: false
+    ,expired: false
+    ,visualizable_mod: 'yes'
+    ,tags:
+      [
+        'gostoso'
+        ,'espetacular'
+        ,'incrivel'
+      ]
+    ,goals:
+      [
+        {
+          name: 'meta 1'
+          ,description: 'descricao da meta 1'
+          ,date_begin: new Date
+          ,date_dream: new Date
+          ,date_end: new Date
+          ,visible: true
+          ,realocate: false
+          ,expired: false
+          ,tags:
+            [
+              'rapidez'
+              ,'agilidade'
+              ,'facil'
+            ]
+          ,historic:
+            [
+              { date_realocate:  new Date}
+            ]
+          ,activities:
+            [
+             
+            ]
+        }
+      ]
+    ,members:
+      [
+        
+      ]
+  }
+ }
+var opt = { upsert : true};
+db.projects.update(query,mod, opt);
+
+
+
+
+comments =
+      {
+        text: "outro comentario muito loco"
+        ,date_comment:new Date
+        ,member:{
+          id_user: ObjectId("56cb8e797cb0fd72a7c50edc")
+          ,notify: true
+        }
+
+        ,file: {
+          path: ""
+          ,weight: 0
+          ,name: ""
+        }
+      };
+var query = {};
+var mod = { $push : { comment : comments } };
+var opt = { multi : true }
+db.activities.update(query, mod, opt)
+
+
+
+
