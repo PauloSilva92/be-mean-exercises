@@ -824,4 +824,166 @@ db.activities.update(query, mod, opt)
 
 
 
+delete
 
+var query = { activities : [] };
+db.projects.remove(query);
+
+var goals = [];
+function remove(){
+  function getProj(proj){
+    function getGoal(goal){
+      goals.push(goal.activities)
+      if (goal.activities.length === 0){
+        db.projects.remove({name: proj.name});
+      }
+    };
+    db.projects.findOne({name: proj.name}).goals.forEach(getGoal) 
+  }
+  db.projects.find({}).forEach(getProj)
+}
+function remove(){ 
+  var users = db.users.find({},{ _id: 1 }).skip(3).limit(2)
+  var result = db.projects.aggregate (
+    [
+      {
+        $match : {
+          $or : [
+              { 'members.id_user' : users[0]._id }
+              ,{ 'members.id_user' : users[1]._id }
+          ]
+        }
+      }
+      ,{ $unwind : '$goals' }
+      ,{ $unwind : '$goals.activities' }
+      ,{
+        $group : {
+          _id : null
+          ,projects : {
+            $push : '$_id'
+          }
+          , activities : {
+            $push : '$goals.activities.id_activity'
+          }
+        }
+      }
+    ]
+  ).result[0].projects;
+  for( i = 0 ; i < result.length; i++){
+    db.projects.remove(result[i]);
+  };  
+}
+
+var users = db.users.find({},{ _id: 1 }).skip(3).limit(2)
+var result = db.projects.aggregate (
+  [
+    {
+      $match : {
+        $or : [
+            { 'members.id_user' : users[0]._id }
+            ,{ 'members.id_user' : users[1]._id }
+        ]
+      }
+    }
+    ,{ $unwind : '$goals' }
+    ,{ $unwind : '$goals.activities' }
+    ,{
+      $group : {
+        _id : null
+        ,projects : {
+          $push : '$_id'
+        }
+        , activities : {
+          $push : '$goals.activities.id_activity'
+        }
+      }
+    }
+  ]
+).result[0].projects
+db.projects.remove({ _id : { $in : result[0].projects } });
+
+
+var resultado = db.projects.aggregate(
+  [
+    { $match : { 'goals.tags' : /rapidez/i } },
+    { $unwind :  '$goals' },
+    {
+      $group : {
+        _id : null,
+        projects : {
+          $push : '$_id'
+        }
+      }
+    }
+  ]
+)
+db.projects.remove({ _id : { $in : resultado.result[0].projects } })
+
+
+db.projects.aggregate([
+        {$match: {'goals.tags': /supimpa/i}},
+        {$unwind: "$goals"},
+         ])
+
+
+ {
+            $group: {
+                _id: null,
+                projects: {
+                    $push: "$_id"
+                }
+            }
+    }
+
+
+
+db.projects.aggregate(
+  [
+    {
+      $match : { name : /projeto 1/i}
+    },
+    { $unwind : '$goals' },
+    {
+            $group: {
+                _id: null,
+                projects: {
+                    $push: "$_id"
+                },
+                goals : {
+                  $push : "$goals.name"
+                }
+            }
+    }
+  ]
+)
+
+
+var user = { createUser: "PauloLeituraEscrita",
+  pwd: "123",
+  roles: [
+    { role: "readWrite", db: "be-mean-mongo" }
+  ]
+}
+db.createUser(user);
+
+
+db.runCommand({ grantRolesToUser : "PauloLeituraEscrita",
+      roles : [ "grantRolesToUser", "revokeRole"]
+});
+db.runCommand({ usersInfo: { user: "PauloLeituraEscrita", db: "be-mean-mongo" }})
+
+ db.runCommand( { revokeRolesFromUser: "PauloLeituraEscrita",
+  roles: [
+          { role: "revokeRole", db: "be-mean-mongo" },
+  ]
+ })
+
+
+
+ db.runCommand({
+  createRole: "revokeRole",
+  privileges : [
+    { resource : { db : "be-mean-mongo", collection : "" }, actions : [ "revokeRole" ]}
+  ],
+  roles : []
+ })

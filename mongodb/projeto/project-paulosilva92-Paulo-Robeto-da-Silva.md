@@ -1227,6 +1227,271 @@ WriteResult({
 
 ## Delete - remoção
 
+### 1. Apague todos os projetos que não possuam tags.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var query = { tags : [] };
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.remove(query);
+Removed 0 record(s) in 16ms
+WriteResult({
+  "nRemoved": 0
+})
+```
+
+### 2. Apague todos os projetos que não possuam comentários nas atividades.
+
+```js
+
+```
+
+### 3. Apague todos os projetos que não possuam atividades.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var goals = [];
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> function remove(){
+...   function getProj(proj){
+...     function getGoal(goal){
+...       goals.push(goal.activities)
+...       if (goal.activities.length === 0){
+...         db.projects.remove({name: proj.name});
+...       }
+...     };
+...     db.projects.findOne({name: proj.name}).goals.forEach(getGoal) 
+...   }
+...   db.projects.find({}).forEach(getProj)
+... }
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> remove()
+Removed 1 record(s) in 1ms
+Removed 1 record(s) in 1ms
+```
+
+### 4. Escolha 2 usuário e apague todos os projetos em que os 2 fazem parte.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> function remove(){ 
+...   var users = db.users.find({},{ _id: 1 }).skip(3).limit(2)
+...   var result = db.projects.aggregate (
+...     [
+...       {
+...         $match : {
+...           $or : [
+...               { 'members.id_user' : users[0]._id }
+...               ,{ 'members.id_user' : users[1]._id }
+...           ]
+...         }
+...       }
+...     ]
+...   ).result[0].projects;
+...   for( i = 0 ; i < result.length; i++){
+...     db.projects.remove(result[i]);
+...   };  
+... }
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> remove()
+Removed 1 record(s) in 328ms
+Removed 0 record(s) in 1ms
+Removed 1 record(s) in 79ms
+Removed 0 record(s) in 2ms
+Removed 1 record(s) in 1ms
+Removed 0 record(s) in 1ms
+Removed 1 record(s) in 2ms
+Removed 0 record(s) in 0ms
+```
+
+### 5. Apague todos os projetos que possuam uma determinada tag em goal.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var resultado = db.projects.aggregate(
+...   [
+...     { $match : { 'goals.tags' : /rapidez/i } },
+...     { $unwind :  '$goals' },
+...     {
+...       $group : {
+...         _id : null,
+...         projects : {
+...           $push : '$_id'
+...         }
+...       }
+...     }
+...   ]
+... )
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.projects.remove({ _id : { $in : resultado.result[0].projects } })
+Removed 1 record(s) in 25ms
+WriteResult({
+  "nRemoved": 1
+})
+```
+
+## Gerenciamento de usuários
+
+### 1. Crie um usuário com permissões APENAS de Leitura.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var user = { createUser: "Paulo",
+...   pwd: "123",
+...   roles: [
+...     { role: "read", db: "be-mean-mongo" }
+...   ]
+... }
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.createUser(user);
+Successfully added user: {
+  "createUser": "Paulo",
+  "roles": [
+    {
+      "role": "read",
+      "db": "be-mean-mongo"
+    }
+  ]
+}
+```
+
+### 2. Crie um usuário com permissões de Escrita e Leitura.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> var user = { createUser: "PauloLeituraEscrita",
+...   pwd: "123",
+...   roles: [
+...     { role: "readWrite", db: "be-mean-mongo" }
+...   ]
+... }
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.createUser(user);
+Successfully added user: {
+  "createUser": "PauloLeituraEscrita",
+  "roles": [
+    {
+      "role": "readWrite",
+      "db": "be-mean-mongo"
+    }
+  ]
+}
+```
+
+### 3. Adicionar o papel grantRolesToUser e revokeRole para o usuário com Escrita e Leitura.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand({
+...   createRole: "grantRolesToUser",
+...   privileges : [
+...     { resource : { db : "be-mean-mongo", collection : "" }, actions : [ "grantRolesToUser" ]}
+...   ],
+...   roles : []
+...  })
+{
+  "ok": 1
+}
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand({
+...   createRole: "revokeRole",
+...   privileges : [
+...     { resource : { db : "be-mean-mongo", collection : "" }, actions : [ "revokeRole" ]}
+...   ],
+...   roles : []
+...  })
+{
+  "ok": 1
+}
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand({ grantRolesToUser : "PauloLeituraEscrita",
+...       roles : [ "grantRolesToUser", "revokeRole"]
+... });
+{
+  "ok": 1
+}
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand({ usersInfo: { user: "PauloLeituraEscrita", db: "be-mean-mongo" }})
+{
+  "users": [
+    {
+      "_id": "be-mean-mongo.PauloLeituraEscrita",
+      "user": "PauloLeituraEscrita",
+      "db": "be-mean-mongo",
+      "roles": [
+        {
+          "role": "revokeRole",
+          "db": "be-mean-mongo"
+        },
+        {
+          "role": "grantRolesToUser",
+          "db": "be-mean-mongo"
+        },
+        {
+          "role": "readWrite",
+          "db": "be-mean-mongo"
+        }
+      ]
+    }
+  ],
+  "ok": 1
+}
+```
+
+### 4. Remover o papel grantRolesToUser para o usuário com Escrita e Leitura.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand( { revokeRolesFromUser: "PauloLeituraEscrita",
+...   roles: [
+...           { role: "revokeRole", db: "be-mean-mongo" },
+...   ]
+...  })
+{
+  "ok": 1
+}
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand({ usersInfo: { user: "PauloLeituraEscrita", db: "be-mean-mongo" }})
+{
+  "users": [
+    {
+      "_id": "be-mean-mongo.PauloLeituraEscrita",
+      "user": "PauloLeituraEscrita",
+      "db": "be-mean-mongo",
+      "roles": [
+        {
+          "role": "grantRolesToUser",
+          "db": "be-mean-mongo"
+        },
+        {
+          "role": "readWrite",
+          "db": "be-mean-mongo"
+        }
+      ]
+    }
+  ],
+  "ok": 1
+}
+```
+
+### 5. Listar todos os usuários com seus papéis e ações.
+
+```js
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand( { usersInfo: 1 } )
+{
+  "users": [
+    {
+      "_id": "be-mean-mongo.Paulo",
+      "user": "Paulo",
+      "db": "be-mean-mongo",
+      "roles": [
+        {
+          "role": "read",
+          "db": "be-mean-mongo"
+        }
+      ]
+    },
+    {
+      "_id": "be-mean-mongo.PauloLeituraEscrita",
+      "user": "PauloLeituraEscrita",
+      "db": "be-mean-mongo",
+      "roles": [
+        {
+          "role": "grantRolesToUser",
+          "db": "be-mean-mongo"
+        },
+        {
+          "role": "readWrite",
+          "db": "be-mean-mongo"
+        }
+      ]
+    }
+  ],
+  "ok": 1
+}
+```
+
 ## Sharding
 // coloque aqui todos os comandos que você executou
 
