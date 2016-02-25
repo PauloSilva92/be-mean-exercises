@@ -1458,7 +1458,7 @@ paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand({ usersInfo: { user
 ### 5. Listar todos os usuários com seus papéis e ações.
 
 ```js
-paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand( { usersInfo: 1 } )
+paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand( { usersInfo: ["Paulo", "PauloLeituraEscrita"], showPrivileges: true })
 {
   "users": [
     {
@@ -1469,6 +1469,86 @@ paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand( { usersInfo: 1 } )
         {
           "role": "read",
           "db": "be-mean-mongo"
+        }
+      ],
+      "inheritedRoles": [
+        {
+          "role": "read",
+          "db": "be-mean-mongo"
+        }
+      ],
+      "inheritedPrivileges": [
+        {
+          "resource": {
+            "db": "be-mean-mongo",
+            "collection": ""
+          },
+          "actions": [
+            "collStats",
+            "dbHash",
+            "dbStats",
+            "find",
+            "killCursors",
+            "listCollections",
+            "listIndexes",
+            "planCacheRead"
+          ]
+        },
+        {
+          "resource": {
+            "anyResource": true
+          },
+          "actions": [
+            "listCollections"
+          ]
+        },
+        {
+          "resource": {
+            "db": "be-mean-mongo",
+            "collection": "system.indexes"
+          },
+          "actions": [
+            "collStats",
+            "dbHash",
+            "dbStats",
+            "find",
+            "killCursors",
+            "listCollections",
+            "listIndexes",
+            "planCacheRead"
+          ]
+        },
+        {
+          "resource": {
+            "db": "be-mean-mongo",
+            "collection": "system.js"
+          },
+          "actions": [
+            "collStats",
+            "dbHash",
+            "dbStats",
+            "find",
+            "killCursors",
+            "listCollections",
+            "listIndexes",
+            "planCacheRead"
+          ]
+        },
+        {
+          "resource": {
+            "db": "be-mean-mongo",
+            "collection": "system.namespaces"
+          },
+          "actions": [
+            "collStats",
+            "dbHash",
+            "dbStats",
+            "find",
+            "killCursors",
+            "listCollections",
+            "listIndexes",
+            "planCacheRead"
+          ]
         }
       ]
     },
@@ -1484,6 +1564,111 @@ paulo-sti-ni-1401(mongod-3.2.3) be-mean-mongo> db.runCommand( { usersInfo: 1 } )
         {
           "role": "readWrite",
           "db": "be-mean-mongo"
+        }
+      ],
+      "inheritedRoles": [
+        {
+          "role": "readWrite",
+          "db": "be-mean-mongo"
+        },
+        {
+          "role": "grantRolesToUser",
+          "db": "be-mean-mongo"
+        }
+      ],
+      "inheritedPrivileges": [
+        {
+          "resource": {
+            "db": "be-mean-mongo",
+            "collection": ""
+          },
+          "actions": [
+            "collStats",
+            "convertToCapped",
+            "createCollection",
+            "createIndex",
+            "dbHash",
+            "dbStats",
+            "dropCollection",
+            "dropIndex",
+            "emptycapped",
+            "find",
+            "grantRolesToUser",
+            "insert",
+            "killCursors",
+            "listCollections",
+            "listIndexes",
+            "planCacheRead",
+            "remove",
+            "renameCollectionSameDB",
+            "update"
+          ]
+        },
+        {
+          "resource": {
+            "anyResource": true
+          },
+          "actions": [
+            "listCollections"
+          ]
+        },
+        {
+          "resource": {
+            "db": "be-mean-mongo",
+            "collection": "system.indexes"
+          },
+          "actions": [
+            "collStats",
+            "dbHash",
+            "dbStats",
+            "find",
+            "killCursors",
+            "listCollections",
+            "listIndexes",
+            "planCacheRead"
+          ]
+        },
+        {
+          "resource": {
+            "db": "be-mean-mongo",
+            "collection": "system.js"
+          },
+          "actions": [
+            "collStats",
+            "convertToCapped",
+            "createCollection",
+            "createIndex",
+            "dbHash",
+            "dbStats",
+            "dropCollection",
+            "dropIndex",
+            "emptycapped",
+            "find",
+            "insert",
+            "killCursors",
+            "listCollections",
+            "listIndexes",
+            "planCacheRead",
+            "remove",
+            "renameCollectionSameDB",
+            "update"
+          ]
+        },
+        {
+          "resource": {
+            "db": "be-mean-mongo",
+            "collection": "system.namespaces"
+          },
+          "actions": [
+            "collStats",
+            "dbHash",
+            "dbStats",
+            "find",
+            "killCursors",
+            "listCollections",
+            "listIndexes",
+            "planCacheRead"
+          ]
         }
       ]
     }

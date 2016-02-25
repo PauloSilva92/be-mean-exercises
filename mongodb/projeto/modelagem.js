@@ -987,3 +987,7 @@ db.runCommand({ usersInfo: { user: "PauloLeituraEscrita", db: "be-mean-mongo" }}
   ],
   roles : []
  })
+
+
+db.runCommand( { usersInfo: ["Paulo", "PauloLeituraEscrita"], showPrivileges: true })
+ 
