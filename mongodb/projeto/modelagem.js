@@ -874,7 +874,7 @@ function remove(){
   };  
 }
 
-var users = db.users.find({},{ _id: 1 }).skip(3).limit(2)
+var users = db.activities.find({},{ _id: 1 }).skip(3).limit(2)
 var result = db.projects.aggregate (
   [
     {
@@ -991,3 +991,62 @@ db.runCommand({ usersInfo: { user: "PauloLeituraEscrita", db: "be-mean-mongo" }}
 
 db.runCommand( { usersInfo: ["Paulo", "PauloLeituraEscrita"], showPrivileges: true })
  
+
+var query = { comment : { $size : 0 } }; 
+var activities = db.activities.find(query , { _id :1  }).toArray();
+var query2 = {'goals.activities._id' : { $in : activities } }
+var opt = { multi : true }
+db.projects.remove(query2 , opt );
+
+
+var  activitiesArr = []
+var activitiesProj = [];
+var query = { comment : { $size : 4 } }; 
+var activities = db.activities.find(query , { _id :1  }).toArray();
+var query = {}
+db.projects.find(query,{_id: 0, goals : 1 }).forEach( function (curr){
+  activitiesArr.push(curr.goals)
+});
+activitiesArr.forEach(function (curr){
+  activitiesProj.push(curr[0].activities.forEach(function(curr){
+    return curr._id;
+  }))
+})
+
+
+db.projects.find({}, { 'goals.activities._id' : 1 , _id: 0 })
+
+
+
+
+
+var query = { comment : { $not : { $size : 0 } } }; 
+var activitiesId = db.activities.find({query},{ _id: 1 })
+var result = db.projects.aggregate (
+  [
+    {
+      $match : {
+        $or : [
+            { 'goals.activities.id_activity' : activitiesId[0]._id }
+            ,{ 'goals.activities.id_activity' : activitiesId[1]._id }
+        ]
+      }
+    }
+    ,{ $unwind : '$goals' }
+    ,{ $unwind : '$goals.activities' }
+    ,{
+      $group : {
+        _id : null
+        ,projects : {
+          $push : '$_id'
+        }
+        , activities : {
+          $push : '$goals.activities.id_activity'
+        }
+      }
+    }
+  ]
+).result
+db.projects.remove({ _id : { $in : result[0].projects } });
+
+
