@@ -1,6 +1,9 @@
 # Node.js - Aula 01 - Exercício
+
 **user:** https://github.com/paulosilva92
+
 **autor:** Paulo Roberto da Silva
+
 **date:** Fri Feb 26 2016 22:33:04 GMT-0300 (BRT)
 
 ## Explique como um processo síncrono e assíncrono roda no Node.js, dê um exemplo para cada.
