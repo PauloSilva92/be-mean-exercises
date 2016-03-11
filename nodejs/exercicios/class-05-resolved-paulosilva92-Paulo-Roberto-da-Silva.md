@@ -352,7 +352,7 @@ console.log(process.cwd());
 
 ##### __filename
 
-Contém o nome do arquivo que está sendo executado.
+Contém o caminho do arquivo que está sendo executado.
 
 ```js
 console.log(__filename);
@@ -451,6 +451,26 @@ console.log(teste);
 
 ## Desafio: Criar um servidor web de arquivos estáticos: css, html, js e etc;
 
-```js
+Colocar este código num arquivo com nome de `app.js` e rodar com o node 
 
+```js
+const http = require('http');
+const fs = require('fs');
+
+http.createServer((req, res)=> {
+  fs.readFile(__dirname + req.url, function (err,data) {
+    if (err) {
+      res.writeHead(404);
+      console.log(err);
+      res.end("Página não encontrada");
+      return;
+    }
+    res.writeHead(200);
+    res.end(data);
+  });
+}).listen(3000, ()=>{
+    console.log('Server rodando na porta 3000');
+});
 ```
+
+Colocando no navegador `http://localhost:3000/app.js` veremos então o código do nosso arquivo que cria o servidor
