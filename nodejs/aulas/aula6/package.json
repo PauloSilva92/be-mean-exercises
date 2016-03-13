@@ -1,0 +1,14 @@
+{
+  "name": "aula6",
+  "version": "1.0.0",
+  "description": "Projeto para acompanhar a aula 6 do bemean e fazer os exercicios",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Paulo Roberto da Silva <paulorob_s@hotmail.com>",
+  "license": "WTFPL",
+  "dependencies": {
+    "mongoose": "^4.4.7"
+  }
+}

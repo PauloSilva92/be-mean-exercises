@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 
 http.createServer((req, res)=> {
+    console.log(req.url);
   fs.readFile(__dirname + req.url, function (err,data) {
     if (err) {
       res.writeHead(404);
